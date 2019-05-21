@@ -48,28 +48,23 @@ class Home extends Component {
                         {this.props.notes.map((note, id) => (
                             <a key={`note_${note.id}`} className="list-group-item list-group-item-action bg-light" onClick={() => this.selectForEdit(id)}>{note.text}</a>
                         ))}
-                        <a href="#" className="list-group-item list-group-item-action bg-light">Dashboard</a>
-                        <a href="#" className="list-group-item list-group-item-action bg-light">Shortcuts</a>
-                        <a href="#" className="list-group-item list-group-item-action bg-light">Overview</a>
-                        <a href="#" className="list-group-item list-group-item-action bg-light">Events</a>
-                        <a href="#" className="list-group-item list-group-item-action bg-light">Profile</a>
-                        <a href="#" className="list-group-item list-group-item-action bg-light">Status</a>
+                        
                       </div>
                     </div>
 
                     <div className="bg-light border-right" id="page-content-wrapper">
-                        <h3>Add new note</h3>
+                        <h3>Add sentence</h3>
                         <form onSubmit={this.submitNote}>
                             <input
                                 value={this.state.text}
-                                placeholder="Enter note here..."
+                                placeholder="Enter source sentence here..."
                                 onChange={(e) => this.setState({text: e.target.value})}
                                 required />
                             <button onClick={this.resetForm}>Reset</button>
-                            <input type="submit" value="Save Note" />
+                            <input type="submit" value="Save sentence" />
                         </form>
 
-                        <h3>Notes</h3>
+                        <h3>Selected Sentence</h3>
                         <table>
                             <tbody>
                                 {this.props.notes.map((note, id) => (
