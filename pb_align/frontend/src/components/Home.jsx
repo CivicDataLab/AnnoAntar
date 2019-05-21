@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 
-import {notes, auth} from "../actions";
+import {notes, auth, stories} from "../actions";
 
 
 
 class Home extends Component {
 
     componentDidMount() {
-        this.props.fetchNotes();
+        this.props.fetchStories();
     }
 
     state = {
@@ -48,7 +48,7 @@ class Home extends Component {
                         {this.props.notes.map((note, id) => (
                             <a key={`note_${note.id}`} className="list-group-item list-group-item-action bg-light" onClick={() => this.selectForEdit(id)}>{note.text}</a>
                         ))}
-                        
+
                       </div>
                     </div>
 
@@ -80,6 +80,28 @@ class Home extends Component {
                             <span> {this.state.text} </span>
                         </div>
 
+                        {this.props.stories.map((story, id) => (
+                            <div key={`story_${story.id}`} >
+                                <br/>
+                                <div className="d-flex row mx-md-n5">
+                                    <div className="mx-auto col bordered" style={{ width: '50%'}}>
+                                        <p> {story.source_text} </p>
+                                    </div>
+                                    <div className="mx-auto col bordered" style={{ width: '50%'}}>
+                                        <p> {story.translation_text} </p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <button className="btn row" onClick={() => this.props.selectStory(id)}>Select Story</button>
+                                </div>
+                                <br/>
+
+                            </div>
+                        ))}
+
+
+
                     </div>
                 </div>
             </div>
@@ -91,7 +113,9 @@ class Home extends Component {
 const mapStateToProps = state => {
     return {
         notes: state.notes,
+        stories: state.stories,
         user: state.auth.user,
+        sentences: state.sentences,
     }
 }
 
@@ -99,6 +123,9 @@ const mapDispatchToProps = dispatch => {
     return {
         fetchNotes: () => {
             dispatch(notes.fetchNotes());
+        },
+        fetchStories: () => {
+            dispatch(stories.fetchStories());
         },
         addNote: (text) => {
             return dispatch(notes.addNote(text));
@@ -108,6 +135,9 @@ const mapDispatchToProps = dispatch => {
         },
         deleteNote: (id) => {
             dispatch(notes.deleteNote(id));
+        },
+        selectStory: (id) => {
+            dispatch(stories.fetchSentences(id));
         },
         logout: () => dispatch(auth.logout()),
     }

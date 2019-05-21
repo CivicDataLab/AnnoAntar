@@ -16,10 +16,12 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.views.generic import TemplateView
 
-from notes import endpoints
+from notes import endpoints as notes_eps
+from stories import endpoints as stories_eps
 
 urlpatterns = [
-    url(r'^api/', include(endpoints)),
+    url(r'^api/', include(notes_eps)),
+    url(r'^api/', include(stories_eps)),
     url(r'^api/auth/', include('knox.urls')),
     url(r'^', TemplateView.as_view(template_name="index.html")),
 ]
