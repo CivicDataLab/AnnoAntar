@@ -8,7 +8,7 @@ import thunk from "redux-thunk";
 import {auth} from "./actions";
 import ponyApp from "./reducers";
 
-import PonyNote from "./components/PonyNote";
+import Home from "./components/Home";
 import NotFound from "./components/NotFound";
 import Register from "./components/Register";
 import Login from "./components/Login";
@@ -38,7 +38,7 @@ class RootContainerComponent extends Component {
         return (
             <BrowserRouter>
                 <Switch>
-                    <PrivateRoute exact path="/" component={PonyNote} />
+                    <PrivateRoute exact path="/" component={Home} />
                     <Route exact path="/register" component={Register} />
                     <Route exact path="/login" component={Login} />
                     <Route component={NotFound} />

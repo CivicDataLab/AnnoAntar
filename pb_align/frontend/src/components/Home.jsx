@@ -5,7 +5,7 @@ import {notes, auth} from "../actions";
 
 
 
-class PonyNote extends Component {
+class Home extends Component {
 
     componentDidMount() {
         this.props.fetchNotes();
@@ -37,7 +37,7 @@ class PonyNote extends Component {
     render() {
         return (
             <div>
-                <h2>Welcome to PonyNote!</h2>
+                <h2>Welcome to Story sentence Aligner</h2>
                 <hr />
                 <div style={{textAlign: "right"}}>
                     {this.props.user.username} (<a onClick={this.props.logout}>logout</a>)
@@ -98,4 +98,4 @@ const mapDispatchToProps = dispatch => {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(PonyNote);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

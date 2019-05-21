@@ -115,3 +115,6 @@ webpack-stats.prod.json
 # build files
 build/
 bundles/
+
+# pycharm
+.idea/
