@@ -12,27 +12,28 @@ class Home extends Component {
     }
 
     state = {
-        text: "",
-        story: null,
-        updateNoteId: null,
-        isStorySelected: false,
-        sentences: {},
+        selectedStory: null,
+        selectedSentence : {source:"", translation:""}
     }
 
     resetForm = () => {
-        this.setState({story: null, text: "", updateNoteId: null, isStorySelected: false, sentences: null});
+        this.setState({selectedStory: null, selectedSentence : { source:"", translation:"" }});
     }
 
-    selectForEdit = (id) => {
-        let note = this.props.notes[id];
-        this.setState({text: note.text, updateNoteId: id});
+    changeTranslation = (text) => {
+        console.log(text);
     }
 
     selectStoryForAlign = (id) => {
         let story = this.props.stories[id];
         console.log(story);
-        this.state.story = story;
-        this.props.selectStory(id);
+        this.state.selectedStory = story;
+        this.props.selectStory(id).then(this.setState({...this.state, selectedSentence: this.props.sentences[0]}));
+    }
+
+    selectForEdit = (id) => {
+        this.setState({...this.state, selectedSentence : this.props.sentences[id]});
+        console.log(this.state.selectedSentence);
     }
 
     submitNote = (e) => {
@@ -77,31 +78,51 @@ class Home extends Component {
                  }
 
                 {this.props.sentences.length >0 &&
-                    <div id = "wrapper" className="d-flex">
-                        <div className="bg-light border-right" id="sidebar-wrapper">
-                          <div className="list-group list-group-flush">
-                            {this.props.sentences.map((sentence, id) => (
-                                <a key={`sentence_${sentence.id}`} className="list-group-item list-group-item-action bg-light" >{sentence.source}</a>
-                            ))}
-
-                          </div>
+                    <div>
+                        <div className="d-flex row mx-md-n5">
+                            <div className="mx-auto col bordered" style={{ width: '50%'}}>
+                                <p> {this.state.selectedStory.source_text} </p>
+                            </div>
+                            <div className="mx-auto col bordered" style={{ width: '50%'}}>
+                                <p> {this.state.selectedStory.translation_text} </p>
+                            </div>
                         </div>
 
-                        <div className="bg-light border-right" id="page-content-wrapper">
-                            <h3>Add sentence</h3>
-                            <form >
-                                <input
-                                    value={this.state.text}
-                                    placeholder="Enter source sentence here..."
+                        <br/>
+                        <div id = "wrapper" className="d-flex">
 
-                                    required />
-                                <input type="submit" value="Save sentence" />
-                            </form>
 
-                            <h3>Selected Sentence</h3>
-                            <div>
-                                <span> {this.state.text} </span>
+                            <div className="bg-light border-right" id="sidebar-wrapper">
+                              <div className="list-group list-group-flush">
+                                {this.props.sentences.map((sentence, id) => (
+                                    <a key={`sentence_${sentence.id}`}
+                                       className="list-group-item list-group-item-action bg-light"
+                                       onClick={() => this.selectForEdit(id)}> {sentence.source}
+                                       </a>
+                                ))}
+
+                              </div>
                             </div>
+
+
+                            {this.state.selectedSentence &&
+                            <div className="bg-light border-right" id="page-content-wrapper">
+                                <h5>Selected Sentence</h5>
+                                <span> {this.state.selectedSentence.source} </span>
+                                <form >
+                                    <input
+                                        value={this.state.selectedSentence.translation}
+                                        placeholder="Enter translation here..."
+                                        onChange={(e) => this.changeTranslation({text: e.target.value})}
+                                        required />
+                                    <button>Discard</button>
+                                    <input type="submit" value="Save Alignment" />
+                                  </form>
+                            </div>}
+                        </div>
+                        <div className="pull-right">
+                            <button> Prev </button>
+                            <button> Next </button>
                         </div>
                     </div>
                 }
@@ -110,14 +131,20 @@ class Home extends Component {
     }
 }
 
+function SentenceAlignment (props)  {
+    return (<div className="bg-light border-right" id="page-content-wrapper">
+        <h5>Selected Sentence</h5>
+        <span> {props.selectedSentence.source} </span>
+        <span> {props.selectedSentence.translation} </span>
+    </div>)
+}
 
 const mapStateToProps = state => {
     return {
-        notes: state.notes,
         stories: state.stories,
         user: state.auth.user,
         sentences: state.sentences,
-        isStorySelected: false,
+        selectedSentence: {source:"", translation:""},
     }
 }
 
