@@ -54,7 +54,7 @@ export const fetchSentences = index => {
             })
             .then(res => {
                 if (res.status === 200) {
-                    return dispatch({type: 'FETCH_SENTENCES', sentences: res.data});
+                    return dispatch({type: 'UPDATE_ALIGNMENTS', sentences: res.data});
                 } else if (res.status === 401 || res.status === 403) {
                     dispatch({type: "AUTHENTICATION_ERROR", data: res.data});
                     throw res.data;
