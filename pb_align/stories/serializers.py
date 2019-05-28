@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from .models import Story, Alignment
@@ -36,8 +37,9 @@ class AlignmentListSerializer(serializers.ListSerializer):
 
 class AlignmentSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
+    modified_id = serializers.PrimaryKeyRelatedField(many=False, read_only=False, queryset=User.objects.all())
 
     class Meta:
         model = Alignment
-        fields = ('id', 'story_id', 'source', 'translation', 'state')
+        fields = ('id', 'story_id', 'source', 'translation', 'state', 'modified_id')
         list_serializer_class = AlignmentListSerializer

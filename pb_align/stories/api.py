@@ -63,8 +63,10 @@ class AlignmentUpdateAPI(UpdateAPIView):
 
     def put(self, request, *args, **kwarg):
         story_id = self.kwargs['story_id']
-        serializer = self.get_serializer(data=request.data, many=True)
-        serializer.is_valid(raise_exception=True)
+        sentences = request.data
+        for sentence in sentences:
+            sentence['modified_id'] = request.user.id
+        serializer = self.get_serializer(data=sentences, many=True)
 
         if serializer.is_valid():
             serializer.update(AlignmentListAPI.get_alignments(story_id), serializer.data)
