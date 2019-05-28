@@ -64,7 +64,7 @@ export const fetchStory = (storyId) => {
 }
 
 
-export const fetchSentences = index => {
+export const fetchSentences = storyId => {
     return (dispatch, getState) => {
         let headers = {"Content-Type": "application/json"};
         let {token} = getState().auth;
@@ -73,7 +73,6 @@ export const fetchSentences = index => {
             headers["Authorization"] = `Token ${token}`;
         }
 
-        let storyId = getState().stories[index].id;
         console.log(storyId);
 
         return fetch(`/api/sentences/${storyId}/`, {headers, })

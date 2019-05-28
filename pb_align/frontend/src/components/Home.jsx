@@ -173,6 +173,7 @@ const mapDispatchToProps = dispatch => {
             dispatch(stories.fetchStories());
         },
         selectStory: (id) => {
+            let story_id = this.props.stories[id].id;
             return dispatch(stories.fetchSentences(id));
         },
         logout: () => dispatch(auth.logout()),
