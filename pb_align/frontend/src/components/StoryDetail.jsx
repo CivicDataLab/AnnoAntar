@@ -18,32 +18,61 @@ class StoryDetail extends Component {
     isAcceptState  = (state) => {
         switch(state) {
             case 'A':
-              return "btn btn_green";
+              return "btn btn-success";
           case 'E':
-              return "btn btn_green";
+              return "btn btn-success";
             default:
-              return "btn";
+              return "btn btn-default";
           }
     }
     isRejectState  = (state) => {
         switch(state) {
             case 'R':
-              return "btn btn_red";
+              return "btn btn-danger";
             default:
-              return "btn";
+              return "btn btn-default";
       }
     }
     isEditedState  = (state)  => {
         switch(state) {
             case 'E':
-              return "btn btn_grey";
+              return "btn btn-secondary";
+            case 'EnA':
+              return "btn btn-secondary";
             default:
-              return "btn";
+              return "btn btn-default";
       }
     }
 
+    acceptTranslation = (id) => {
+        let sentences = this.props.sentences;
+        let sentence = this.props.sentences[id];
+        sentence.state = 'A';
+
+        sentences.splice(id, 1, sentence);
+        this.setState(sentences: sentences);
+
+    }
+    rejectTranslation = (id) => {
+        let sentences = this.props.sentences;
+        let sentence = this.props.sentences[id];
+        sentence.state = 'R';
+
+        sentences.splice(id, 1, sentence);
+        this.setState(sentences: sentences);
+
+    }
+    editTranslation = (id, e) => {
+        let sentences = this.props.sentences;
+        let sentence = this.props.sentences[id];
+        sentence.state = 'EnA';
+        sentence.translation = e.target.value;
+        sentences.splice(id, 1, sentence);
+        this.setState(sentences: sentences);
+
+    }
+
     render() {
-        console.log(this.props);
         return (
             <div>
                 <h2>Story sentence Aligner</h2>
@@ -72,11 +101,27 @@ class StoryDetail extends Component {
                                     <input
                                             value={sentence.translation}
                                             placeholder="Enter translation here..."
+                                            onChange={(e)=>this.editTranslation(id, e)}
                                             required />
                                     <td>
-                                        <button className = {this.isAcceptState(sentence.state)}>Accept</button> &nbsp;
-                                        <button className = {this.isRejectState(sentence.state)}>Reject</button> &nbsp;
-                                        <button className = {this.isEditedState(sentence.state)}>Edited</button> &nbsp;
+                                        <div className="btn-group" role="group" aria-label="...">
+                                          <div className="btn-group" role="group">
+                                            <button
+                                                type="button"
+                                                onClick={()=>this.acceptTranslation(id)}
+                                                className = {this.isAcceptState(sentence.state)}>Accept</button>
+                                          </div>
+                                          <div className="btn-group" role="group">
+                                            <button
+                                                type="button"
+                                                onClick={()=>this.rejectTranslation(id)}
+                                                className = {this.isRejectState(sentence.state)}>Reject</button>
+                                          </div>
+                                          <div className="btn-group" role="group">
+                                            <button type="button"  disabled className = {this.isEditedState(sentence.state)}>Edited</button>
+                                          </div>
+                                        </div>
+
                                     </td>
                                 </tr>
                             ))}
