@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'webpack_loader',
     'rest_framework',
     'knox',
-
+    'django_extensions',
     'notes.apps.NotesConfig',
     'stories.apps.StoriesConfig',
 ]

@@ -36,15 +36,6 @@ class Home extends Component {
         console.log(this.state.selectedSentence);
     }
 
-    submitNote = (e) => {
-        e.preventDefault();
-        if (this.state.updateNoteId === null) {
-            this.props.addNote(this.state.text).then(this.resetForm)
-        } else {
-            this.props.updateNote(this.state.updateNoteId, this.state.text).then(this.resetForm);
-        }
-    }
-
 
     renderRedirect = () => {
         if (this.state.storySelected) {

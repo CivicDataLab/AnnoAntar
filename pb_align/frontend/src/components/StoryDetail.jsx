@@ -72,6 +72,13 @@ class StoryDetail extends Component {
 
     }
 
+    saveSentences = () => {
+        let sentences = this.props.sentences;
+        sentences = sentences.map((sentence) => {if (sentence.state === 'EnA') {sentence.state = 'E'} });
+        const { story_id } = this.props.match.params;
+        this.props.updateTranslations(this.props.sentences, story_id);
+    }
+
     render() {
         return (
             <div>
@@ -129,7 +136,9 @@ class StoryDetail extends Component {
                     </table>
                 </div>
 
-
+            <button
+                onClick={()=>this.saveSentences()}
+                className="btn btn-info pull-right"> Submit </button>
 
             </div>
         )
@@ -153,6 +162,9 @@ const mapDispatchToProps = dispatch => {
         },
         fetchSentences: (id) => {
             return dispatch(stories.fetchSentences(id));
+        },
+        updateTranslations: (sentences, storyId) => {
+            return dispatch(stories.updateSentences(sentences, storyId));
         },
         logout: () => dispatch(auth.logout()),
     }
