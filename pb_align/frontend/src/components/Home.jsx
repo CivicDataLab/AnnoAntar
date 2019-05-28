@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-
+import { Redirect } from 'react-router'
 import {notes, auth, stories} from "../actions";
 
 
@@ -13,7 +13,8 @@ class Home extends Component {
 
     state = {
         selectedStory: null,
-        selectedSentence : {source:"", translation:""}
+        selectedSentence : {source:"", translation:""},
+        storySelected: false,
     }
 
     resetForm = () => {
@@ -27,8 +28,7 @@ class Home extends Component {
     selectStoryForAlign = (id) => {
         let story = this.props.stories[id];
         console.log(story);
-        this.state.selectedStory = story;
-        this.props.selectStory(id).then(this.setState({...this.state, selectedSentence: this.props.sentences[0]}));
+        this.setState({...this.state, selectedStory: story, storySelected: true});
     }
 
     selectForEdit = (id) => {
@@ -45,35 +45,40 @@ class Home extends Component {
         }
     }
 
+
+    renderRedirect = () => {
+        if (this.state.storySelected) {
+          return <Redirect to={{
+            pathname: `/storydetail/${this.state.selectedStory.id}`,
+        }}/>
+        }
+    }
+
     render() {
         return (
             <div>
-                <h2>Welcome to Story sentence Aligner</h2>
+                <h2>Story sentence Aligner</h2>
                 <hr />
                 <div style={{textAlign: "right"}}>
                     {this.props.user.username} (<a onClick={this.props.logout}>logout</a>)
                 </div>
                 {!this.props.sentences.length > 0 &&
                 <div>
-                {this.props.stories.map((story, id) => (
-                    <div key={`story_${story.id}`} >
-                        <br/>
-                        <div className="d-flex row mx-md-n5">
-                            <div className="mx-auto col bordered" style={{ width: '50%'}}>
-                                <p> {story.source_text} </p>
-                            </div>
-                            <div className="mx-auto col bordered" style={{ width: '50%'}}>
-                                <p> {story.translation_text} </p>
-                            </div>
-                        </div>
 
-                        <div>
-                            <button className="btn row" onClick={() => this.selectStoryForAlign(id)}>Select Story</button>
-                        </div>
-                        <br/>
+                {this.renderRedirect()}
 
-                    </div>
-                ))}
+                <table>
+                    <tbody>
+                        {this.props.stories.map((story, id) => (
+                            <tr key={`story_${story.id}`}>
+                                <td>{story.title}</td>
+                                <td><StoryState state={story.state}/></td>
+                                <td><button className="btn row" onClick={() => this.selectStoryForAlign(id)}>Select Story</button></td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
                 </div>
                  }
 
@@ -131,6 +136,19 @@ class Home extends Component {
     }
 }
 
+function StoryState({state}) {
+    switch(state) {
+        case 'P':
+          return <span>In Progress</span>;
+        case 'S':
+          return <span>To Start</span>;
+        case 'C':
+          return <span>Completed</span>;
+        default:
+          return null;
+  }
+}
+
 function SentenceAlignment (props)  {
     return (<div className="bg-light border-right" id="page-content-wrapper">
         <h5>Selected Sentence</h5>
@@ -150,20 +168,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchNotes: () => {
-            dispatch(notes.fetchNotes());
-        },
+
         fetchStories: () => {
             dispatch(stories.fetchStories());
-        },
-        addNote: (text) => {
-            return dispatch(notes.addNote(text));
-        },
-        updateNote: (id, text) => {
-            return dispatch(notes.updateNote(id, text));
-        },
-        deleteNote: (id) => {
-            dispatch(notes.deleteNote(id));
         },
         selectStory: (id) => {
             return dispatch(stories.fetchSentences(id));
